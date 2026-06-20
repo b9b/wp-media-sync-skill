@@ -1,0 +1,31 @@
+# Local credentials and machine-specific config.
+.env
+.env.*
+!.env.example
+
+# Python/runtime caches.
+__pycache__/
+*.py[cod]
+.pytest_cache/
+.mypy_cache/
+
+# OS/editor noise.
+.DS_Store
+.idea/
+.vscode/
+
+# Runtime media state. These files belong to the consuming project, not Git.
+media/log.json
+media/files/*
+!media/files/.gitkeep
+media/*.tmp
+
+# Reusable test runtime output, generated SSH keys, and Docker test state.
+tests/runtime/
+
+# Release artifacts generated from the clean Skill file list.
+dist/
+
+# Generic logs and temporary files.
+*.log
+*.tmp

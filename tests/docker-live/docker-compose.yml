@@ -1,0 +1,37 @@
+services:
+  db:
+    image: mariadb:11.4
+    environment:
+      MARIADB_DATABASE: wordpress
+      MARIADB_USER: wordpress
+      MARIADB_PASSWORD: wordpress
+      MARIADB_ROOT_PASSWORD: root-password
+    healthcheck:
+      test: ["CMD-SHELL", "mariadb-admin ping -h 127.0.0.1 -uroot -proot-password --silent"]
+      interval: 2s
+      timeout: 5s
+      retries: 30
+    volumes:
+      - db_data:/var/lib/mysql
+
+  wordpress:
+    build:
+      context: .
+    depends_on:
+      db:
+        condition: service_healthy
+    environment:
+      WORDPRESS_DB_HOST: db:3306
+      WORDPRESS_DB_USER: wordpress
+      WORDPRESS_DB_PASSWORD: wordpress
+      WORDPRESS_DB_NAME: wordpress
+    ports:
+      - "127.0.0.1:${WP_MEDIA_SYNC_DOCKER_SSH_PORT:-2222}:22"
+      - "127.0.0.1:${WP_MEDIA_SYNC_DOCKER_HTTP_PORT:-8088}:80"
+    volumes:
+      - wp_data:/var/www/html
+      - ../runtime/docker/id_ed25519.pub:/tmp/wp-media-sync/id_ed25519.pub:ro
+
+volumes:
+  db_data:
+  wp_data:

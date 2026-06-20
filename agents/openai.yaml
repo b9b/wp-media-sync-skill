@@ -1,0 +1,4 @@
+interface:
+  display_name: "WordPress Media Sync"
+  short_description: "同步远程媒体到WordPress媒体库并自动回写数据"
+  default_prompt: "Use $wp-media-sync to upload remote media in my HTML or JSON and return the rewritten data."
