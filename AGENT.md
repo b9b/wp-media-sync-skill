@@ -23,3 +23,4 @@
 
 - 当前项目下的`.env`是用来本地测试的，没有暴露敏感信息。不过在git的时候，也要忽略。仅保留`.env.example`。
 - 本Skill会配合其他Skill使用，例如可以生成古腾堡文章数据、生成Elementor所需的JSON等数据的Skill，处理完成以后交给各种推送数据到远程网站的Skill等。这一点如果有影响的话，要注意。
+- 发布新版本时，先确认`README.md`的用户安装说明仍然有效，再推送`v*`格式的tag。GitHub Actions会自动运行离线测试、构建干净发布包，并把`install.sh`、`wp-media-sync.zip`、`wp-media-sync.tar.gz`、`SHA256SUMS`上传到GitHub Releases。

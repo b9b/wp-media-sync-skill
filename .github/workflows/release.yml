@@ -1,0 +1,45 @@
+name: Release
+
+on:
+  push:
+    tags:
+      - "v*"
+
+permissions:
+  contents: write
+
+jobs:
+  build-and-publish:
+    name: Build and publish release assets
+    runs-on: ubuntu-latest
+
+    steps:
+      - name: Checkout
+        uses: actions/checkout@v4
+
+      - name: Set up Python
+        uses: actions/setup-python@v5
+        with:
+          python-version: "3.x"
+
+      - name: Validate
+        run: |
+          python3 -B -m py_compile scripts/wp-media-sync.py tools/build-release.py tests/run-media-sync-tests.py
+          sh -n install.sh
+          bash -n scripts/check-wp-cli.sh
+          python3 -B tests/run-media-sync-tests.py
+
+      - name: Build release assets
+        run: python3 -B tools/build-release.py
+
+      - name: Publish GitHub Release
+        env:
+          GH_TOKEN: ${{ github.token }}
+        run: |
+          gh release create "$GITHUB_REF_NAME" \
+            dist/install.sh \
+            dist/wp-media-sync.zip \
+            dist/wp-media-sync.tar.gz \
+            dist/SHA256SUMS \
+            --title "$GITHUB_REF_NAME" \
+            --notes "Release $GITHUB_REF_NAME for wp-media-sync."
